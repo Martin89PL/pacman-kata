@@ -102,7 +102,27 @@ describe('pacman tests', () => {
     
     test('Pacman eat ghost when has regular state', () => {
         pacman.eatGhost(Ghosts.Blinky);
-        expect(pacman.getGhosts()).toEqual(1);
+        expect(pacman.ghostCount().get(Ghosts.Blinky)).toEqual(1);
     });
+
+    test('Pacman eat a few ghosts and has statistics about them', () => {
+        pacman.eatGhost(Ghosts.Blinky);
+        pacman.eatGhost(Ghosts.Blinky);
+        expect(pacman.ghostCount().get(Ghosts.Blinky)).toEqual(2);
+    });
+
+    test('Pacman eats few different ghosts', () => {
+        pacman.eatGhost(Ghosts.Blinky);
+        pacman.eatGhost(Ghosts.Clyde);
+        pacman.eatGhost(Ghosts.Inky);
+        pacman.eatGhost(Ghosts.Pinky);
+        pacman.eatGhost(Ghosts.Inky);
+
+        expect(pacman.ghostCount().get(Ghosts.Blinky)).toEqual(1);
+        expect(pacman.ghostCount().get(Ghosts.Clyde)).toEqual(1);
+        expect(pacman.ghostCount().get(Ghosts.Inky)).toEqual(2);
+        expect(pacman.ghostCount().get(Ghosts.Pinky)).toEqual(1);
+
+    })
 
   });

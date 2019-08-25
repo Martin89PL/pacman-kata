@@ -8,4 +8,5 @@ export interface PacManInterface {
  ghostCount: number;
  state: string | State;
  superTime: number;
+ ghosts?: Map<string, number>;
 }

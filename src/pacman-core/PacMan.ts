@@ -4,15 +4,15 @@ import { State } from "./State";
 import { Ghosts } from "./Ghosts";
 import { PacManInterface } from "./PacManInterface";
 
-export default class PacMan implements PacManInterface {
+export default class PacMan {
 
-    lives: number;
-    points: number;
-    level: number;
-    ballCount: number;
-    ghostCount: number;
-    state: string;
-    superTime: number;
+    private lives: number;
+    private points: number;
+    private level: number;
+    private ballCount: number;
+    private state: string;
+    private superTime: number;
+    private ghosts: Map<string, number>
 
     constructor(attrs: Partial<PacManInterface> = {}) {
         this.ballCount = attrs.ballCount;
@@ -20,8 +20,8 @@ export default class PacMan implements PacManInterface {
         this.level = attrs.level;
         this.lives = attrs.lives;
         this.points = attrs.points;
-        this.ghostCount = attrs.ghostCount;
         this.superTime = attrs.superTime;
+        this.ghosts = new Map();
     }
 
     tick() {
@@ -47,7 +47,7 @@ export default class PacMan implements PacManInterface {
         
     }
 
-    eatGhost(ghostName: Ghosts) {
+    eatGhost(ghost: Ghosts) {
 
         if (this.state === State.super) {
             this.points += 10;
@@ -61,11 +61,14 @@ export default class PacMan implements PacManInterface {
             this.points = 0;
         }
 
-        this.ghostCount++;
+ 
+        this.ghosts.set(ghost, (this.ghosts.get(ghost)) ? this.ghosts.get(ghost) + 1 : 1);
 
     }
 
-    
+    ghostCount() {
+        return this.ghosts;
+    }
 
     getPoints(): number {
         return this.points;
@@ -84,9 +87,6 @@ export default class PacMan implements PacManInterface {
     }
     getLives(): number {
         return this.lives;
-    }
-    getGhosts(): number {
-        return this.ghostCount;
     }
 }
 

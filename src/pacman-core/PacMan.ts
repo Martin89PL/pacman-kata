@@ -3,6 +3,7 @@ import Super from "./Super";
 import { State } from "./State";
 import { Ghosts } from "./Ghosts";
 import { PacManInterface } from "./PacManInterface";
+import DirectionInterface from "./DirectionInterface";
 
 export default class PacMan {
 
@@ -12,7 +13,8 @@ export default class PacMan {
     private ballCount: number;
     private state: string;
     private superTime: number;
-    private ghosts: Map<string, number>
+    private ghosts: Map<string, number>;
+    private direction: DirectionInterface;
 
     constructor(attrs: Partial<PacManInterface> = {}) {
         this.ballCount = attrs.ballCount;

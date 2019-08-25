@@ -2,80 +2,107 @@ import PacMan from '../src/pacman-core/PacMan';
 import Super from '../src/pacman-core/Super';
 import { Ghosts } from '../src/pacman-core/Ghosts';
 import { State } from '../src/pacman-core/State';
+import { PacManInterface } from '../src/pacman-core/PacManInterface';
 
 
-test('test ballCount after eatBall by Pacman', () => {
-    const pacman = new PacMan();
-    pacman.eatBall(new Super());
-    expect(1).toEqual(pacman.getBallCount())
-});
+describe('pacman tests', () => {
 
-test('test points after eatBall by Pacman', () => {
-    const pacman = new PacMan();
-    pacman.eatBall(new Super());
-    expect(pacman.getPoints()).toEqual(1)
-});
+    const defaultPacmanInitialState: PacManInterface = {
+        lives: 3,
+        points: 0,
+        level: 0,
+        ballCount: 0,
+        ghostCount: 0,
+        state: State.regular,
+        superTime: 0,
+    };
 
-test('test increase level when Pacman eat 40 balls', () => {
-    const pacman = new PacMan(39);
-    pacman.eatBall(new Super());
-    expect(pacman.getLevel()).toEqual(1);
-});
+    let pacman = null;
 
-test('test reset ballCount when Pacman eat 40 balls', () => {
-    const pacman = new PacMan(39);
-    pacman.eatBall(new Super());
-    expect(pacman.getBallCount()).toEqual(0);
-});
+    beforeEach(() =>{
+        pacman = new PacMan(defaultPacmanInitialState);
+    });
 
-test('if eating Ball is type Super state of Pacman should be super', () => {
-    const pacman = new PacMan();
-    pacman.eatBall(new Super());
-    expect(pacman.getState()).toBe('super');
-});
+    test('test ballCount after eatBall by Pacman', () => {
+        pacman.eatBall(new Super());
+        expect(1).toEqual(pacman.getBallCount())
+    });
+    
+    test('test points after eatBall by Pacman', () => {
+        pacman.eatBall(new Super());
+        expect(pacman.getPoints()).toEqual(1)
+    });
+    
+    test('test increase level when Pacman eat 40 balls', () => {
 
-test('if eating Ball is type Super super time of Pacman should be equals 10', () => {
-    const pacman = new PacMan();
-    pacman.eatBall(new Super());
-    expect(pacman.getSuperTime()).toEqual(10);
-});
+        defaultPacmanInitialState.ballCount = 39;
+    
+        pacman = new PacMan(defaultPacmanInitialState);
+        pacman.eatBall(new Super());
+        expect(pacman.getLevel()).toEqual(1);
+    });
+    
+    test('test reset ballCount when Pacman eat 40 balls', () => {
+        defaultPacmanInitialState.ballCount = 39;
+        
+        pacman = new PacMan(defaultPacmanInitialState);
+        pacman.eatBall(new Super());
 
-test('Pacman super time should be decreased by one when tick', () => {
-    const pacman = new PacMan(39);
-    pacman.eatBall(new Super());
-    pacman.tick()
-    expect(pacman.getSuperTime()).toEqual(9);
-});
+        expect(pacman.getBallCount()).toEqual(0);
+    });
+    
+    test('if eating Ball is type Super state of Pacman should be super', () => {
+        pacman.eatBall(new Super());
 
-test('Pacman super should change to regular when super time is zero', () => {
-    const pacman = new PacMan(39);
-    pacman.eatBall(new Super());
-    pacman.tick()
-    for (let i = 0; i <9; i++) {pacman.tick()}
-    expect(pacman.getSuperTime()).toEqual(0);
-});
+        expect(pacman.getState()).toBe('super');
+    });
+    
+    test('if eating Ball is type Super super time of Pacman should be equals 10', () => {
+        pacman.eatBall(new Super());
 
-test('Pacman eat ghost when has super state', () => {
-    const pacman = new PacMan(0, State.super);
-    pacman.eatGhost(Ghosts.Blinky);
-    expect(pacman.getPoints()).toEqual(10);
-});
+        expect(pacman.getSuperTime()).toEqual(10);
+    });
+    
+    test('Pacman super time should be decreased by one when tick', () => {
+        pacman.eatBall(new Super());
+        pacman.tick()
 
-test('Pacman eat ghost when has regular state', () => {
-    const pacman = new PacMan();
-    pacman.eatGhost(Ghosts.Blinky);
-    expect(pacman.getLives()).toEqual(2);
-});
+        expect(pacman.getSuperTime()).toEqual(9);
+    });
+    
+    test('Pacman super should change to regular when super time is zero', () => {
+        pacman.eatBall(new Super());
+        pacman.tick()
+        for (let i = 0; i < 9; i++) { pacman.tick() }
 
-test('Pacman reset lives when eating ghost without lives', () => {
-    const pacman = new PacMan(39, State.regular, 1, 1);
-    pacman.eatGhost(Ghosts.Blinky);
-    expect(pacman.getPoints()).toEqual(0);
-});
+        expect(pacman.getSuperTime()).toEqual(0);
+    });
+    
+    test('Pacman eat ghost when has super state', () => {
+        defaultPacmanInitialState.state = State.super;    
+        const pacman = new PacMan(defaultPacmanInitialState);
+        pacman.eatGhost(Ghosts.Blinky);
 
-test('Pacman eat ghost when has regular state', () => {
-    const pacman = new PacMan();
-    pacman.eatGhost(Ghosts.Blinky);
-    expect(pacman.getGhosts()).toEqual(1);
-});
+        expect(pacman.getPoints()).toEqual(10);
+    });
+    
+    test('Pacman eat ghost when has regular state', () => {
+        pacman.eatGhost(Ghosts.Blinky);
+        expect(pacman.getLives()).toEqual(2);
+    });
+    
+    test('Pacman reset lives when eating ghost without lives', () => {
+        defaultPacmanInitialState.ballCount = 39;
+        defaultPacmanInitialState.lives = 1;
+    
+        const pacman = new PacMan(defaultPacmanInitialState);
+        pacman.eatGhost(Ghosts.Blinky);
+        expect(pacman.getPoints()).toEqual(0);
+    });
+    
+    test('Pacman eat ghost when has regular state', () => {
+        pacman.eatGhost(Ghosts.Blinky);
+        expect(pacman.getGhosts()).toEqual(1);
+    });
 
+  });

@@ -2,22 +2,26 @@ import Ball from "./Ball";
 import Super from "./Super";
 import { State } from "./State";
 import { Ghosts } from "./Ghosts";
+import { PacManInterface } from "./PacManInterface";
 
-export default class PacMan {
+export default class PacMan implements PacManInterface {
 
-    private lives: number = 3;
-    private points: number = 0;
-    private level: number = 0;
-    private ballCount: number = 0;
-    private ghostCount: number = 0;
-    private state: string | State = State.regular;
-    private superTime: number = 0;
+    lives: number;
+    points: number;
+    level: number;
+    ballCount: number;
+    ghostCount: number;
+    state: string;
+    superTime: number;
 
-    constructor(ballCount: number = 0, state: State = State.regular, lives: number = 3, points: number = 0) {
-        this.ballCount = ballCount;
-        this.state = state;
-        this.lives = lives;
-        this.points = points;
+    constructor(attrs: Partial<PacManInterface> = {}) {
+        this.ballCount = attrs.ballCount;
+        this.state = attrs.state;
+        this.level = attrs.level;
+        this.lives = attrs.lives;
+        this.points = attrs.points;
+        this.ghostCount = attrs.ghostCount;
+        this.superTime = attrs.superTime;
     }
 
     tick() {

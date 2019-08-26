@@ -1,4 +1,10 @@
 import { PacManState, PacManRenderer } from './pacman-preview/PacManRenderer';
+import PacManGame from './pacman-core/PacManGame';
+import PacMan from './pacman-core/PacMan';
+import { PacManInterface } from './pacman-core/PacManInterface';
+import { State } from './pacman-core/State';
+import { Direction } from './pacman-core/Direction';
+
 
 const previewRenderer = new PacManRenderer();
 
@@ -31,6 +37,18 @@ const testState: PacManState = {
     superTime: 0
 };
 
+const defaultPacmanInitialState: PacManInterface = {
+    lives: 3,
+    points: 0,
+    level: 0,
+    ballCount: 0,
+    ghostCount: 0,
+    state: State.regular,
+    superTime: 0,
+};
+
+const pacManGame = new PacManGame(testState, new PacMan(defaultPacmanInitialState));
+
 previewRenderer.loadAssets().then(() => {
     previewRenderer.render(testState);
     window.addEventListener('keydown', event => {
@@ -39,9 +57,12 @@ previewRenderer.loadAssets().then(() => {
             previewRenderer.render(testState);
         } else if (event.keyCode == 38) {
             // up arrow
+                     
         }
         else if (event.keyCode == 40) {
             // down arrow
+            pacManGame.move(Direction.DOWN);
+            previewRenderer.render(pacManGame.render());   
         }
         else if (event.keyCode == 37) {
            // left arrow
@@ -52,4 +73,4 @@ previewRenderer.loadAssets().then(() => {
     });
 });
 
-
+export const initialPacManState = testState;

@@ -122,7 +122,6 @@ describe('pacman tests', () => {
         expect(pacman.ghostCount().get(Ghosts.Clyde)).toEqual(1);
         expect(pacman.ghostCount().get(Ghosts.Inky)).toEqual(2);
         expect(pacman.ghostCount().get(Ghosts.Pinky)).toEqual(1);
-
     })
 
   });
